@@ -2,13 +2,10 @@ import { LitElement, html, css, svg } from 'https://cdn.pika.dev/lit-element';
 
 let ROWS = 100, COLS = 100, FRACTION = 0.2, BOARD = [], _BOARD = [], first = true;
 const isAlive = ((row, col) => { return BOARD && BOARD[row] && BOARD[row][col] && BOARD[row][col].alive || false });
-const liveNighbourCount = (row, col) => {
-    return isAlive(row - 1, col - 1) + isAlive(row - 1, col) + isAlive(row - 1, col + 1)
+const willLive = (row, col) => {
+    let neighbours = isAlive(row - 1, col - 1) + isAlive(row - 1, col) + isAlive(row - 1, col + 1)
         + isAlive(row, col - 1) + isAlive(row, col + 1)
         + isAlive(row + 1, col - 1) + isAlive(row + 1, col) + isAlive(row + 1, col + 1);
-}
-const willLive = (row, col) => {
-    let neighbours = liveNighbourCount(row, col);
     return neighbours === 3 || neighbours === 2 && isAlive(row, col);
 }
 const generateBoardState = (liveFunc) => {
@@ -50,8 +47,7 @@ customElements.define('lit-life', class LitLife extends LitElement {
     render() {
         return html`
             <svg width="${this.cols * this.size}" height="${this.rows * this.size}">
-                ${BOARD.map((row, r) => row.map((col, c) =>
-                    svg`<rect class="${col.alive ? 'alive' : ''} ${col.hasAlive ? 'haslive' : ''}" x="${c * this.size}" y="${r * this.size}" width="${this.size}" height="${this.size}"/>`))}        
+                ${BOARD.map((row, r) => row.map((col, c) => svg`<rect class="${col.alive ? 'alive' : ''} ${col.hasAlive ? 'haslive' : ''}" x="${c * this.size}" y="${r * this.size}" width="${this.size}" height="${this.size}"/>`))}        
             </svg> 
         `;
     }
