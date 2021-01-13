@@ -1,4 +1,4 @@
-import { LitElement, html, css, svg } from './lit-element/lit-element.js';
+import { LitElement, html, css, svg } from 'https://cdn.pika.dev/lit-element';
 
 let ROWS = 100, COLS = 100, FRACTION = 0.2, BOARD = [], _BOARD = [], first = true;
 const isAlive = ((row, col) => { return BOARD && BOARD[row] && BOARD[row][col] && BOARD[row][col].alive });
