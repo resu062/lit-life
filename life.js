@@ -1,9 +1,9 @@
 import { LitElement, html, css, svg } from 'https://cdn.pika.dev/lit-element';
 
-let ROWS = 100, COLS = 100, FRACTION = 0.2, BOARD = [], _BOARD = [], first = true;
+let ROWS, COLS, FRACTION, BOARD = [], _BOARD = [], first = true;
 const isAlive = ((row, col) => { return BOARD && BOARD[row] && BOARD[row][col] && BOARD[row][col].alive || false });
 const willLive = (row, col) => {
-    let neighbours = isAlive(row - 1, col - 1) + isAlive(row - 1, col) + isAlive(row - 1, col + 1)
+    const  neighbours = isAlive(row - 1, col - 1) + isAlive(row - 1, col) + isAlive(row - 1, col + 1)
         + isAlive(row, col - 1) + isAlive(row, col + 1)
         + isAlive(row + 1, col - 1) + isAlive(row + 1, col) + isAlive(row + 1, col + 1);
     return neighbours === 3 || neighbours === 2 && isAlive(row, col);
@@ -26,12 +26,13 @@ const generateBoardState = (liveFunc) => {
 const randomBoardState = () => { return generateBoardState(function () { return Math.random() < FRACTION }) }
 
 customElements.define('lit-life', class LitLife extends LitElement {
-    static get properties() { return { rows: { type: Number }, cols: { type: Number }, size: { type: Number } } }
+    static get properties() { return { rows: { type: Number }, cols: { type: Number }, size: { type: Number }, fraction: { type: Number } } }
 
     constructor() {
         super();
-        this.rows = 100;
-        this.cols = 100;
+        ROWS = this.rows = 100;
+        COLS = this.cols = 100;
+        FRACTION = this.fraction = 0.2;
         this.size = 10;
         randomBoardState();
     }
