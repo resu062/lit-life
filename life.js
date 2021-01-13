@@ -1,7 +1,7 @@
 import { LitElement, html, css, svg } from 'https://cdn.pika.dev/lit-element';
 
 let ROWS = 100, COLS = 100, FRACTION = 0.2, BOARD = [], _BOARD = [], first = true;
-const isAlive = ((row, col) => { return BOARD && BOARD[row] && BOARD[row][col] && BOARD[row][col].alive });
+const isAlive = ((row, col) => { return BOARD && BOARD[row] && BOARD[row][col] && BOARD[row][col].alive || false });
 const liveNighbourCount = (row, col) => {
     return isAlive(row - 1, col - 1) + isAlive(row - 1, col) + isAlive(row - 1, col + 1)
         + isAlive(row, col - 1) + isAlive(row, col + 1)
