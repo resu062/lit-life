@@ -48,8 +48,12 @@ customElements.define('lit-life', class LitLife extends LitElement {
     render() {
         return html`
             <svg width="${this.cols * this.size}" height="${this.rows * this.size}">
-                ${BOARD.map((row, r) => row.map((col, c) => svg`<rect class="${col.alive ? 'alive' : ''} ${col.hasAlive ? 'haslive' : ''}" x="${c * this.size}" y="${r * this.size}" width="${this.size}" height="${this.size}"/>`))}        
-            </svg> 
+                ${BOARD.map((row, r) =>
+                    svg`<g>
+                        ${row.map((col, c) => svg`<rect class="${col.alive ? 'alive' : ''} ${col.hasAlive ? 'haslive' : ''}" x="${c * this.size}" y="${r * this.size}" width="${this.size}" height="${this.size}"/>`)}
+                    </g >`
+                )}
+            </svg>
         `;
     }
 
