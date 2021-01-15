@@ -33,12 +33,12 @@ customElements.define('lit-monitor', class LitMonitor extends LitElement {
     firstUpdated() {
         super.firstUpdated();
         this.frame = 0;
-        this.startTime = Date.now();
+        this.startTime = performance.now();
         this.tick();
     }
 
     tick() {
-        let time = Date.now();
+        let time = performance.now();
         this.frame++;
         if (time - this.startTime > 1000) {
             this.fps = (this.frame / ((time - this.startTime) / 1000)).toFixed(1);
