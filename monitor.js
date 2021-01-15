@@ -1,7 +1,7 @@
 import { LitElement, html, css, svg } from 'https://cdn.pika.dev/lit-element';
 
 customElements.define('lit-monitor', class LitMonitor extends LitElement {
-    static get properties() { return { startTime: { type: Date }, frame: { type: Number }, fps: { type: String } } }
+    static get properties() { return { pref: { type: Object }, startTime: { type: Object }, frame: { type: Number }, fps: { type: String }, memory: { type: String } } }
 
     static get styles() {
         return css`
@@ -17,8 +17,11 @@ customElements.define('lit-monitor', class LitMonitor extends LitElement {
 
             }
             .monitor {
-                width: 130px;
-                height: 50px;
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                width: 180px;
+                height: 40px;
                 padding: 2px;
             }
         `;
@@ -26,13 +29,19 @@ customElements.define('lit-monitor', class LitMonitor extends LitElement {
 
     render() {
         return html`
-            <div class="monitor">fps: ${this.fps}</div>
+            <div class="monitor">
+                <div class="monitor">fps: ${this.fps}</div>
+                <div class="monitor">memory: ${this.memory}</div>
+            </div>
         `;
     }
 
     firstUpdated() {
         super.firstUpdated();
         this.frame = 0;
+        let perf = this.perf = window.performance || {};
+        if (!perf && !perf.memory) perf.memory = { usedJSHeapSize: 0 };
+        if (perf && !perf.memory) perf.memory = { usedJSHeapSize: 0 };
         this.startTime = performance.now();
         this.tick();
     }
@@ -41,10 +50,21 @@ customElements.define('lit-monitor', class LitMonitor extends LitElement {
         let time = performance.now();
         this.frame++;
         if (time - this.startTime > 1000) {
+            let ms = this.perf.memory.usedJSHeapSize;
+            this.memory = this.bytesToSize(ms, 2);
             this.fps = (this.frame / ((time - this.startTime) / 1000)).toFixed(1);
             this.startTime = time;
             this.frame = 0;
         }
         requestAnimationFrame(() => this.tick());
+    }
+
+    bytesToSize(bytes, nFractDigit) {
+        if (bytes == 0) return 'n/a';
+        let sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB'];
+        nFractDigit = nFractDigit !== undefined ? nFractDigit : 0;
+        let precision = Math.pow(10, nFractDigit);
+        let i = Math.floor(Math.log(bytes) / Math.log(1024));
+        return Math.round(bytes * precision / Math.pow(1024, i)) / precision + ' ' + sizes[i];
     }
 });
