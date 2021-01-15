@@ -30,8 +30,8 @@ customElements.define('lit-monitor', class LitMonitor extends LitElement {
     render() {
         return html`
             <div class="monitor">
-                <div class="monitor">fps: ${this.fps}</div>
-                <div class="monitor">memory: ${this.memory}</div>
+                <div>fps: ${this.fps}</div>
+                <div>memory: ${this.memory}</div>
             </div>
         `;
     }
