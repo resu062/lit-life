@@ -63,10 +63,10 @@ customElements.define('lit-life', class LitLife extends LitElement {
     }
 
     loop() {
-        requestAnimationFrame(() => {
-            generateBoardState(willLive);
-            this.requestUpdate();
+        setTimeout(() => {
             requestAnimationFrame(() => this.loop());
-        })
+            this.requestUpdate()
+            generateBoardState(willLive);
+        }, 1000 / 30);
     }
 });

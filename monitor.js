@@ -47,6 +47,7 @@ customElements.define('lit-monitor', class LitMonitor extends LitElement {
     }
 
     tick() {
+        requestAnimationFrame(() => this.tick());
         let time = performance.now();
         this.frame++;
         if (time - this.startTime > 1000) {
@@ -56,7 +57,6 @@ customElements.define('lit-monitor', class LitMonitor extends LitElement {
             this.startTime = time;
             this.frame = 0;
         }
-        requestAnimationFrame(() => this.tick());
     }
 
     bytesToSize(bytes, nFractDigit) {
