@@ -1,4 +1,4 @@
-import { LitElement, html, css, svg } from 'https://cdn.pika.dev/lit-element';
+import { LitElement, html, css, svg } from 'https://cdn.skypack.dev/lit-element';
 
 customElements.define('lit-monitor', class LitMonitor extends LitElement {
     static get properties() {
@@ -8,13 +8,14 @@ customElements.define('lit-monitor', class LitMonitor extends LitElement {
             second: { type: String },
             fps: { type: String },
             memory: { type: String },
+            translateX: { type: Number },
+            translateY: { type: Number },
+            storeLocal: { type: Boolean },
             _fpsMax: { type: Number },
             _fpsArr: { type: Array },
             _memoryMax: { type: Number },
-            _memoryArr: [],
+            _memoryArr: { type: Array },
             _frame: { type: Number },
-            _startTime: { type: Object },
-            _perf: { type: Object }
         }
     }
 
@@ -22,32 +23,35 @@ customElements.define('lit-monitor', class LitMonitor extends LitElement {
         super();
         this.monitorWidth = 180;
         this.barHeight = 10;
-        this.second = '';
-        this.fps = '';
-        this.memory = '';
         this._fpsMax = 60;
         this._fpsArr = [];
         this._memoryMax = 0;
         this._memoryArr = [];
-        this._frame = 0;
+        this.translateX = this.translateY = this._frame = 0;
+        this.storeLocal = true;
+        if (this.storeLocal) {
+            let m_t = localStorage.getItem('monitor_translate');
+            if (m_t) {
+                m_t = JSON.parse(m_t);
+                this.translateX = m_t.x;
+                this.translateY = m_t.y;
+            }
+        }
     }
 
     static get styles() {
         return css`
-            :host {
+            .monitor {
                 font-family: sans-serif;
                 border: 1px solid gray;
                 background: lightgray;
                 box-shadow: 0 8px 10px 1px rgba(0, 0, 0, 0.14), 0 3px 14px 2px rgba(0, 0, 0, 0.12), 0 5px 5px -3px rgba(0, 0, 0, 0.2);
                 position: fixed;
-                bottom: 0;
-                right: 0;
+                left: 0;
+                top: 0;
                 margin: 8px;
                 z-index: 9;
                 padding: 2px;
-
-            }
-            .monitor {
                 display: flex;
                 flex-direction: column;
                 justify-content: center;
@@ -69,9 +73,10 @@ customElements.define('lit-monitor', class LitMonitor extends LitElement {
 
     render() {
         return html`
-            <div class="monitor" style="width:${this.monitorWidth}px">
+            <div class="monitor" style="width:${this.monitorWidth}px; transform :translate3d(${this.translateX}px, ${this.translateY}px, 0px); cursor: pointer;" 
+                    @mousedown="${this._down}">
                 <div class="horizontal" style="justify-content: space-between; margin-bottom: 2px;">
-                    <div style="color: gray">sec: ${this.second}</div>
+                    <div style="color: gray" @click="${this._clearSecond}">sec: ${this.second}</div>
                     <div>${this.fps} fps</div>
                 </div>
                 <div class="horizontal bars" style="height:${this.barHeight}px">
@@ -87,6 +92,8 @@ customElements.define('lit-monitor', class LitMonitor extends LitElement {
 
     firstUpdated() {
         super.firstUpdated();
+        document.addEventListener('mouseup', this._up.bind(this));
+        document.addEventListener('mousemove', this._move.bind(this));
         this._second = performance.now();
         let perf = this._perf = window.performance || {};
         if (!perf && !perf.memory) perf.memory = { usedJSHeapSize: 0 };
@@ -121,5 +128,27 @@ customElements.define('lit-monitor', class LitMonitor extends LitElement {
         let precision = Math.pow(10, nFractDigit);
         let i = Math.floor(Math.log(bytes) / Math.log(1024));
         return Math.round(bytes * precision / Math.pow(1024, i)) / precision + ' ' + sizes[i];
+    }
+
+    _clearSecond() {
+        this._second = performance.now();
+        this.second = 0;
+    }
+
+    _down(e) {
+        this.detail = {
+            x: e.clientX - this.translateX,
+            y: e.clientY - this.translateY
+        };
+    }
+    _up(e) {
+        this.detail = undefined;
+    }
+    _move(e) {
+        if (this.detail) {
+            const x = this.translateX = e.clientX - this.detail.x;
+            const y = this.translateY = e.clientY - this.detail.y;
+            if (this.storeLocal) localStorage.setItem('monitor_translate', JSON.stringify({ x, y }));
+        }
     }
 });
