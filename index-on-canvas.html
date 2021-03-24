@@ -40,8 +40,8 @@
                     this.canvas = this.renderRoot.getElementById('canvas');
                     if (this.canvas?.getContext) {
                         this.ctx = this.canvas.getContext('2d');
+                        this.draw();
                     }
-                    this.draw();
                 }
 
                 render() {

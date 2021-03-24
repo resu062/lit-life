@@ -21,7 +21,6 @@ const generateBoardState = (liveFunc = willLive) => {
     for (let row = 0; row < ROWS; row++)
         for (let col = 0; col < COLS; col++) {
             BOARD[row][col].alive = _BOARD[row][col].alive;
-            BOARD[row][col].hasAlive = BOARD[row][col].hasAlive || _BOARD[row][col].alive;
         }
 }
 
@@ -37,17 +36,16 @@ customElements.define('lit-life', class LitLife extends LitElement {
 
     constructor() {
         super();
-        ROWS = this.rows = 190;
-        COLS = this.cols = 90;
+        ROWS = this.rows = 90;
+        COLS = this.cols = 190;
         FRACTION = this.fraction = 0.2;
         this.size = 10;
     }
 
     static get styles() {
         return css`
-            svg rect { stroke: lightgray; fill: lightyellow; }
-            svg rect.haslive { fill: white; }
-            svg rect.alive { fill: gray; }
+            svg rect { fill: #f0f0f0; }
+            svg rect.alive { fill: #777; }
         `;
     }
 
@@ -55,10 +53,10 @@ customElements.define('lit-life', class LitLife extends LitElement {
         return html`
             <svg width="${this.cols * this.size}" height="${this.rows * this.size}">
                 ${BOARD.map((row, r) =>
-            svg`<g>
-                        ${row.map((col, c) => svg`<rect class="${col.alive ? 'alive' : ''} ${col.hasAlive ? 'haslive' : ''}" x="${c * this.size}" y="${r * this.size}" width="${this.size}" height="${this.size}"/>`)}
+                    svg`<g>
+                        ${row.map((col, c) => svg`<rect class="${col.alive ? 'alive' : ''}" x="${c * this.size}" y="${r * this.size}" width="${this.size-1}" height="${this.size-1}"/>`)}
                     </g >`
-        )}
+                )}
             </svg>
         `;
     }
