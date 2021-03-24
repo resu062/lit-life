@@ -26,12 +26,19 @@ const generateBoardState = (liveFunc = willLive) => {
 }
 
 customElements.define('lit-life', class LitLife extends LitElement {
-    static get properties() { return { rows: { type: Number }, cols: { type: Number }, size: { type: Number }, fraction: { type: Number } } }
+    static get properties() {
+        return {
+            rows: { type: Number },
+            cols: { type: Number },
+            size: { type: Number },
+            fraction: { type: Number }
+        }
+    }
 
     constructor() {
         super();
-        ROWS = this.rows = 100;
-        COLS = this.cols = 100;
+        ROWS = this.rows = 190;
+        COLS = this.cols = 90;
         FRACTION = this.fraction = 0.2;
         this.size = 10;
     }
