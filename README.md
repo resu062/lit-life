@@ -1,13 +1,13 @@
 # lit-life
-Game of life (using svg or canvas), FPS and memory monitor (relocatable) on lit element.
+Game of Life (using svg or canvas), FPS and memory monitor (relocatable) on lit element.
  
- Option 1:
+using Canvas:
  
-   Demo1 on svg    - https://resu062.github.io/lit-life/index.html
+   Demo - https://resu062.github.io/lit-life/index-on-canvas.html
 
- Option 2:
+using SVG:
  
-   Demo2 on svg    - https://resu062.github.io/lit-life/index-on-svg.html
+   Option1 - https://resu062.github.io/lit-life/index-on-svg.html
    
-   Demo3 on canvas - https://resu062.github.io/lit-life/index-on-canvas.html
+   Option2 - https://resu062.github.io/lit-life/index.html
  
